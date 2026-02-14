@@ -51,4 +51,5 @@ urlpatterns = [
     path('api/media/', include('media.urls')),
     path('api/social/', include('social.urls')),
     path('api/stats/', include('stats.urls')),
+    path('chat/', include('chat.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

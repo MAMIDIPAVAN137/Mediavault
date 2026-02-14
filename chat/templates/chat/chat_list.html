@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="ig-chat-container">
+    <!-- Left Sidebar: Conversations -->
+    <div class="ig-sidebar">
+        <div class="sidebar-header">
+            <div class="current-user">
+                <span class="username">{{ user.username }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <button class="new-message-btn">
+                <i class="far fa-edit"></i>
+            </button>
+        </div>
+
+        <div class="thread-list">
+            {% for t in threads %}
+            <a href="{% url 'chat:chat_room' t.id %}" class="thread-item">
+                <div class="avatar-container">
+                    <div class="avatar">
+                        {% for p in t.participants.all %}
+                        {% if p != user %}
+                        {{ p.username|make_list|first|upper }}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="thread-details">
+                    <span class="thread-name">
+                        {% for p in t.participants.all %}{% if p != user %}{{ p.username }}{% endif %}{% endfor %}
+                    </span>
+                    <span class="thread-preview">
+                        {% with last=t.messages.last %}
+                        {% if last %}
+                        {{ last.content|truncatechars:20 }} · {{ last.timestamp|date:"j d" }}
+                        {% else %}
+                        Start a conversation
+                        {% endif %}
+                        {% endwith %}
+                    </span>
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-threads">
+                <p>No messages yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Right Area: Empty Messaging State (Instagram Style) -->
+    <div class="ig-main">
+        <div class="no-chat-selected">
+            <div class="icon-circle">
+                <i class="fab fa-facebook-messenger"></i>
+            </div>
+            <h2>Your Messages</h2>
+            <p>Send private photos and messages to a friend or group.</p>
+            <button class="v-btn v-btn-primary">Send Message</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --ig-border: #dbdbdb;
+        --ig-bg: #ffffff;
+        --ig-sidebar: #fafafa;
+        --ig-accent: #0095f6;
+    }
+
+    .dark:root {
+        --ig-border: #262626;
+        --ig-bg: #000000;
+        --ig-sidebar: #000000;
+    }
+
+    .ig-chat-container {
+        display: flex;
+        height: 85vh;
+        margin: 20px auto;
+        max-width: 935px;
+        background: var(--ig-bg);
+        border: 1px solid var(--ig-border);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .ig-sidebar {
+        width: 350px;
+        border-right: 1px solid var(--ig-border);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        height: 60px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--ig-border);
+    }
+
+    .current-user {
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .new-message-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--text-primary);
+    }
+
+    .thread-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .thread-item {
+        display: flex;
+        padding: 8px 20px;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: background 0.1s;
+    }
+
+    .thread-item:hover {
+        background: var(--hover-bg);
+    }
+
+    .avatar-container .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        border: 2px solid var(--ig-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .thread-details {
+        margin-left: 12px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .thread-name {
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .thread-preview {
+        font-size: 14px;
+        color: var(--text-secondary);
+    }
+
+    .ig-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .icon-circle {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        border: 2px solid var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin-bottom: 16px;
+    }
+
+    .no-chat-selected h2 {
+        font-weight: 300;
+        margin-bottom: 12px;
+    }
+
+    .no-chat-selected p {
+        color: var(--text-secondary);
+        max-width: 250px;
+        margin-bottom: 24px;
+    }
+</style>
+{% endblock %}

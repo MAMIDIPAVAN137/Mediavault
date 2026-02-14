@@ -23,6 +23,13 @@
                 <h1
                     style="margin: 0; font-size: 32px; font-weight: 800; display: flex; align-items: center; gap: 16px;">
                     {{ profile_user.username }}
+                    {% if not is_own and user.is_authenticated %}
+                    <a href="{% url 'chat:start_chat' profile_user.id %}" title="Send Message"
+                        style="font-size: 20px; color: var(--accent-color); opacity: 0.8; transition: transform 0.2s;"
+                        onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fas fa-comment-dots"></i>
+                    </a>
+                    {% endif %}
                     <div style="display: flex; align-items: center; gap: 8px;">
                         {% if profile_user.is_private %}
                         <span class="v-badge v-badge-danger" style="font-size: 12px; border-radius: 20px;">
@@ -43,21 +50,28 @@
                 </h1>
                 <div class="profile-actions" style="display: flex; gap: 12px; align-items: center;">
                     {% if is_own %}
-                    <a href="{% url 'edit_profile' %}" class="v-btn v-btn-secondary">Edit Profile</a>
-                    {% elif user.is_authenticated and user.is_superuser %}
-                    <a href="{% url 'admin_edit_user' profile_user.username %}" class="v-btn v-btn-secondary">Admin:
-                        Edit Profile</a>
+                    <a href="{% url 'edit_profile' %}" class="v-btn v-btn-secondary">
+                        <i class="fas fa-edit" style="margin-right: 8px;"></i>Edit Profile
+                    </a>
+                    {% else %}
+                    {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                    <a href="{% url 'admin_edit_user' profile_user.username %}" class="v-btn v-btn-secondary">
+                        <i class="fas fa-user-shield" style="margin-right: 8px;"></i>Admin Edit
+                    </a>
+                    {% endif %}
+
                     <button
                         class="v-btn {% if is_following or is_follow_requested %}v-btn-secondary{% else %}v-btn-primary{% endif %}"
                         onclick="handleFollow('{{ profile_user.id }}')" id="follow-btn">
                         {% if is_following %}Following{% elif is_follow_requested %}Requested{% else %}Follow{% endif %}
                     </button>
-                    {% elif user.is_authenticated %}
-                    <button
-                        class="v-btn {% if is_following or is_follow_requested %}v-btn-secondary{% else %}v-btn-primary{% endif %}"
-                        onclick="handleFollow('{{ profile_user.id }}')" id="follow-btn">
-                        {% if is_following %}Following{% elif is_follow_requested %}Requested{% else %}Follow{% endif %}
-                    </button>
+
+                    <a href="{% url 'chat:start_chat' profile_user.id %}" class="v-btn v-btn-secondary"
+                        style="background: rgba(91, 95, 199, 0.1); border-color: var(--accent-color); color: var(--accent-color);">
+                        <i class="fas fa-comment-dots" style="margin-right: 8px;"></i>Message
+                    </a>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

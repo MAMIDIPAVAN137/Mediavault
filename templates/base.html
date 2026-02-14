@@ -13,8 +13,6 @@
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.documentElement.classList.add('dark');
-            } else if (savedTheme === 'light') {
-                document.documentElement.classList.remove('dark');
             }
         })();
     </script>
@@ -55,6 +53,11 @@
             </a>
 
             {% if user.is_authenticated %}
+            <a href="{% url 'chat:chat_list' %}" class="nav-item">
+                <i class="fas fa-comments"></i>
+                <span>Messages</span>
+            </a>
+
             {% if user.is_uploader or user.is_superuser %}
             <button class="nav-item v-btn v-btn-secondary"
                 onclick="document.getElementById('upload-modal').classList.add('active')"
@@ -323,13 +326,15 @@
         // --- Theme Logic ---
         function toggleTheme() {
             const body = document.body;
+            const html = document.documentElement;
             body.classList.toggle('dark');
+            html.classList.toggle('dark');
             const isDark = body.classList.contains('dark');
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
             updateThemeIcons();
 
             // Sync with server if logged in
-            if (document.body.getAttribute('data-is-authenticated') === 'true') {
+            if (body.getAttribute('data-is-authenticated') === 'true') {
                 const formData = new FormData();
                 formData.append('theme', isDark ? 'DARK' : 'LIGHT');
                 fetch('{% url "update-theme" %}', {
