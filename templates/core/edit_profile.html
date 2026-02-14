@@ -55,7 +55,7 @@
                             <label class="v-label" for="{{ field.id_for_label }}"
                                 style="margin: 0; font-weight: 700; cursor: pointer;">{{ field.label }}</label>
                             {% if field.help_text %}
-                            <small class="helptext" style="margin: 0; opacity: 0.8;">{{ field.help_text }}</small>
+                            <small class="helptext" style="margin: 0; opacity: 0.8;">{{ field.help_text|safe }}</small>
                             {% endif %}
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         {% endif %}
                     </div>
                     {% if field.help_text %}
-                    <small class="helptext">{{ field.help_text }}</small>
+                    <small class="helptext">{{ field.help_text|safe }}</small>
                     {% endif %}
                     {% endif %}
 
@@ -90,7 +90,7 @@
 
             <!-- Allowed Downloaders Section (Conditional) -->
             <div id="allowed-downloaders-section"
-                style="margin-top: 32px; padding-top: 32px; border-top: 2px solid #FAF9F8; display: {% if form.download_preference.value == 'RESTRICTED' %}block{% else %}none{% endif %};">
+                style="margin-top: 32px; padding-top: 32px; border-top: 2px solid var(--border-color); display: {% if form.download_preference.value == 'RESTRICTED' %}block{% else %}none{% endif %};">
                 <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 16px;">Grant Download Access</h3>
                 <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;">Search for users you want
                     to allow to download your posts.</p>

@@ -19,8 +19,12 @@ class CustomUserCreationForm(UserCreationForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if 'password1' in self.fields: self.fields['password1'].label = "Password"
-        if 'password2' in self.fields: self.fields['password2'].label = "Confirm Password"
+        if 'password1' in self.fields:
+            self.fields['password1'].label = "Password"
+            self.fields['password1'].help_text = ""
+        if 'password2' in self.fields:
+            self.fields['password2'].label = "Confirm Password"
+            self.fields['password2'].help_text = ""
         for field_name, field in self.fields.items():
             label_text = field.label if field.label else field_name.replace('_', ' ').capitalize()
             field.widget.attrs.update({
@@ -81,8 +85,7 @@ class AdminUserUpdateForm(forms.ModelForm):
     new_password = forms.CharField(
         required=False, 
         widget=forms.PasswordInput(attrs={'class': 'v-auth-input', 'placeholder': 'Enter new password to reset'}),
-        label="Reset Password",
-        help_text="Leave blank to keep current password."
+        label="Reset Password"
     )
     
     class Meta:

@@ -598,6 +598,20 @@ body.dark .v-form-control:focus {
     box-shadow: 0 0 0 4px rgba(91, 95, 199, 0.2);
 }
 
+.helptext {
+    display: block;
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+body.dark .helptext {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
 .v-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
