@@ -110,9 +110,8 @@ REST_FRAMEWORK = {
 
 # --- PRODUCTION SECURITY SETTINGS ---
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-] + os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+    "https://mediavault-g49l.onrender.com"
+]
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
