@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     LikeToggleAPIView, ReviewListCreateAPIView, FollowToggleAPIView, 
     FavoriteToggleAPIView, NotificationListView, AcceptFollowRequestView,
-    MarkAllNotificationsReadView
+    MarkAllNotificationsReadView, notifications_page
 )
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     path('notifications/', NotificationListView.as_view(), name='notifications-list'),
     path('notifications/read-all/', MarkAllNotificationsReadView.as_view(), name='notifications-read-all'),
     path('follow/accept/<int:pk>/', AcceptFollowRequestView.as_view(), name='follow-accept'),
+    path('notifications/all/', notifications_page, name='notifications-page'),
 ]

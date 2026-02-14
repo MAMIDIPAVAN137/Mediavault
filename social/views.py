@@ -1,7 +1,8 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Like, Review, Follow, Favorite
 from .serializers import LikeSerializer, ReviewSerializer, FollowSerializer
@@ -129,3 +130,12 @@ class MarkAllNotificationsReadView(APIView):
     def post(self, request):
         Notification.objects.filter(recipient=request.user, is_read=False).update(is_read=True)
         return Response({'status': 'marked_all_read'})
+
+@login_required
+def notifications_page(request):
+    notifications = Notification.objects.filter(recipient=request.user).order_by('-created_at')
+    # Mark as read when page is opened? User might want to do it manually. 
+    # For now, let's just show them.
+    return render(request, 'social/notifications.html', {
+        'all_notifications': notifications
+    })

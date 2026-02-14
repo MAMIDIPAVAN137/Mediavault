@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="v-container">
+    <div class="v-section" style="max-width: 800px; margin: 0 auto;">
+        <div class="v-section-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div>
+                <h1 class="v-section-title">Notifications</h1>
+                <p style="color: var(--text-secondary); margin: 0;">Stay updated with your latest activity.</p>
+            </div>
+            {% if all_notifications %}
+            <button class="v-btn v-btn-secondary" onclick="markAllRead()" style="font-size: 13px; font-weight: 700;">
+                <i class="fas fa-check-double"></i> Mark all as read
+            </button>
+            {% endif %}
+        </div>
+
+        {% if all_notifications %}
+        <div class="v-card" style="border-radius: 20px; overflow: hidden; border: 1.5px solid var(--border-color);">
+            <div id="notifications-full-list">
+                {% for notif in all_notifications %}
+                <div class="v-notif-row {% if not notif.is_read %}unread{% endif %}"
+                    style="padding: 24px; border-bottom: 1px solid var(--border-color); display: flex; gap: 20px; transition: all 0.2s; position: relative;">
+
+                    {% if not notif.is_read %}
+                    <div
+                        style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent-color);">
+                    </div>
+                    {% endif %}
+
+                    <div
+                        style="width: 48px; height: 48px; background: rgba(91, 95, 199, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent-color); flex-shrink: 0;">
+                        {% if notif.notification_type == 'FOLLOW_REQUEST' %}
+                        <i class="fas fa-user-plus" style="font-size: 20px;"></i>
+                        {% elif notif.notification_type == 'LIKE' %}
+                        <i class="fas fa-heart" style="font-size: 20px;"></i>
+                        {% elif notif.notification_type == 'COMMENT' %}
+                        <i class="fas fa-comment" style="font-size: 20px;"></i>
+                        {% else %}
+                        <i class="fas fa-bell" style="font-size: 20px;"></i>
+                        {% endif %}
+                    </div>
+
+                    <div style="flex: 1;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div
+                                style="font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.5;">
+                                {{ notif.message }}
+                            </div>
+                            <div
+                                style="font-size: 12px; color: var(--text-secondary); white-space: nowrap; font-weight: 600; opacity: 0.7;">
+                                {{ notif.created_at|timesince }} ago
+                            </div>
+                        </div>
+
+                        {% if notif.notification_type == 'FOLLOW_REQUEST' and not notif.is_read %}
+                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                            <button class="v-btn v-btn-primary"
+                                style="height: 36px; padding: 0 20px; font-size: 13px; font-weight: 700;"
+                                onclick="acceptFollow('{{ notif.sender.id }}')">Accept Request</button>
+                            <button class="v-btn v-btn-secondary"
+                                style="height: 36px; padding: 0 20px; font-size: 13px; font-weight: 700;">Ignore</button>
+                        </div>
+                        {% endif %}
+
+                        {% if notif.target_url %}
+                        <div style="margin-top: 12px;">
+                            <a href="{{ notif.target_url }}" class="v-btn v-btn-secondary"
+                                style="height: 32px; font-size: 12px; padding: 0 16px; border-radius: 8px;">
+                                View Activity <i class="fas fa-chevron-right"
+                                    style="font-size: 10px; margin-left: 6px;"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="v-card"
+            style="padding: 100px 32px; text-align: center; border-radius: 24px; border: 2px dashed var(--border-color); background: transparent;">
+            <div
+                style="width: 80px; height: 80px; background: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; color: var(--text-secondary); opacity: 0.5;">
+                <i class="fas fa-bell-slash" style="font-size: 32px;"></i>
+            </div>
+            <h2 style="font-weight: 800; color: var(--text-primary); margin: 0 0 8px 0;">No notifications yet</h2>
+            <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto;">We'll notify you when someone
+                follows you, likes your media, or interacts with your profile.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .v-notif-row.unread {
+        background: rgba(91, 95, 199, 0.03);
+    }
+
+    body.dark .v-notif-row.unread {
+        background: rgba(91, 95, 199, 0.05);
+    }
+
+    .v-notif-row:hover {
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    body.dark .v-notif-row:hover {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .v-notif-row:last-child {
+        border-bottom: none !important;
+    }
+</style>
+{% endblock %}

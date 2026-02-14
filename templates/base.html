@@ -79,79 +79,17 @@
             </button>
 
             <!-- Notifications -->
-            <div style="position: relative;">
-                <button class="v-btn v-btn-secondary" onclick="toggleNotifications(event)"
-                    style="padding: 0; width: 40px; height: 40px; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 12px; position: relative;">
-                    <i class="fas fa-bell"></i>
-                    {% if notifications and notifications.count > 0 %}
-                    <span
-                        style="background: var(--danger); color: white; border-radius: 10px; padding: 0 4px; font-size: 10px; position: absolute; top: 0; right: 0; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2.5px solid var(--card-bg); line-height: 1;">
-                        {{ notifications.count }}
-                    </span>
-                    {% endif %}
-                </button>
-                <!-- Notification Dropdown -->
-                <div id="notif-dropdown" class="v-card"
-                    style="display: none; width: 340px; position: absolute; right: 0; top: 52px; max-height: 480px; overflow: hidden; z-index: 2000; box-shadow: var(--shadow-lg); border-radius: 16px;">
-                    <div
-                        style="padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: var(--bg-color);">
-                        <h4 style="margin: 0; font-size: 15px; font-weight: 800;">Notifications</h4>
-                        {% if notifications and notifications.count > 0 %}
-                        <span style="font-size: 12px; font-weight: 700; color: var(--accent-color); cursor: pointer;"
-                            onclick="markAllRead()">Mark all as read</span>
-                        {% endif %}
-                    </div>
-                    <div id="notif-list" style="overflow-y: auto; max-height: 480px;">
-                        {% for notif in notifications %}
-                        <div class="v-notif-item {% if not notif.is_read %}unread{% endif %}"
-                            style="padding: 18px 20px; border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
-                            <div style="display: flex; gap: 12px; align-items: flex-start;">
-                                <div
-                                    style="width: 32px; height: 32px; background: rgba(91, 95, 199, 0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent-color); flex-shrink: 0;">
-                                    {% if notif.notification_type == 'FOLLOW_REQUEST' %}
-                                    <i class="fas fa-user-plus" style="font-size: 14px;"></i>
-                                    {% elif notif.notification_type == 'LIKE' %}
-                                    <i class="fas fa-heart" style="font-size: 14px;"></i>
-                                    {% else %}
-                                    <i class="fas fa-bell" style="font-size: 14px;"></i>
-                                    {% endif %}
-                                </div>
-                                <div style="flex: 1;">
-                                    <div
-                                        style="font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.4; margin-bottom: 4px;">
-                                        {{ notif.message }}
-                                    </div>
-                                    <div
-                                        style="font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; font-weight: 500;">
-                                        <i class="fas fa-clock" style="font-size: 10px; opacity: 0.5;"></i> {{
-                                        notif.created_at|timesince }} ago
-                                    </div>
-                                </div>
-                            </div>
-                            {% if notif.notification_type == 'FOLLOW_REQUEST' %}
-                            <div style="display: flex; gap: 8px; margin-top: 6px; padding-left: 44px;">
-                                <button class="v-btn v-btn-primary"
-                                    style="font-size: 11px; height: 30px; padding: 0 14px; border-radius: 8px; font-weight: 700;"
-                                    onclick="acceptFollow('{{ notif.sender.id }}')">Accept</button>
-                                <button class="v-btn v-btn-secondary"
-                                    style="font-size: 11px; height: 30px; padding: 0 14px; border-radius: 8px; font-weight: 700;">Ignore</button>
-                            </div>
-                            {% endif %}
-                        </div>
-                        {% empty %}
-                        <div style="padding: 60px 24px; text-align: center; color: var(--text-secondary);">
-                            <div
-                                style="width: 56px; height: 56px; background: var(--bg-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
-                                <i class="fas fa-bell-slash" style="font-size: 24px; opacity: 0.3;"></i>
-                            </div>
-                            <p style="font-size: 14px; margin: 0; font-weight: 600;">All caught up!</p>
-                            <p style="font-size: 12px; margin: 4px 0 0 0; opacity: 0.7;">No new notifications right now.
-                            </p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
+            <a href="{% url 'notifications-page' %}" class="v-btn v-btn-secondary"
+                style="padding: 0; width: 40px; height: 40px; font-size: 18px; display: flex; align-items: center; justify-content: center; border-radius: 12px; position: relative;"
+                title="Notifications">
+                <i class="fas fa-bell"></i>
+                {% if notifications and notifications.count > 0 %}
+                <span
+                    style="background: var(--danger); color: white; border-radius: 10px; padding: 0 4px; font-size: 10px; position: absolute; top: 0; right: 0; min-width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-weight: 800; border: 2.5px solid var(--card-bg); line-height: 1;">
+                    {{ notifications.count }}
+                </span>
+                {% endif %}
+            </a>
 
             <!-- Profile & Logout Combo -->
             <div style="display: flex; align-items: center; gap: 8px; margin-left: 8px;">
@@ -860,24 +798,10 @@
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.media-card-menu-btn') && !e.target.closest('.media-card-dropdown')) {
                 document.querySelectorAll('.media-card-dropdown').forEach(m => {
-                    if (m.id !== 'notif-dropdown') m.classList.remove('active');
+                    m.classList.remove('active');
                 });
             }
-            if (!e.target.closest('#notif-dropdown') && !e.target.closest('button[onclick*="toggleNotifications"]')) {
-                const nd = document.getElementById('notif-dropdown');
-                if (nd) nd.style.display = 'none';
-            }
         });
-
-        function toggleNotifications(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            const d = document.getElementById('notif-dropdown');
-            if (d) {
-                const isHidden = d.style.display === 'none' || d.style.display === '';
-                d.style.display = isHidden ? 'block' : 'none';
-            }
-        }
 
         async function acceptFollow(followerId) {
             try {
